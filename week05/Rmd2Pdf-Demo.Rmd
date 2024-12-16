@@ -1,0 +1,70 @@
+---
+title: "Inference Demonstration"
+author: "xyz"
+date: "2024-10-05"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(fig.width=5, fig.height=5,
+                      fig.path='Figs/', echo = TRUE)
+#This sets the working directory
+knitr::opts_knit$set(root.dir = "C:/Users/yunqi/OneDrive - Conestoga College/Conestoga_College/DataScience_Conestoga_2309/Lec_W5")
+
+```
+
+
+
+```{r}
+#if(!is.null(dev.list())) dev.off()
+#cat("\014") 
+#rm(list=ls())
+options(scipen=9)
+```
+### This section loads and attaches all the necessary packages.
+
+```{r}
+#Load packages
+if(!require(HSAUR)){install.packages("HSAUR")}
+library("HSAUR")
+
+if(!require(pastecs)){install.packages("pastecs")}
+library("pastecs")
+
+if(!require(lattice)){install.packages("lattice")}
+library("lattice")
+
+if(!require(tinytex)){install.packages("tinytex")}
+library("tinytex")
+
+```
+
+### Read in Data
+
+```{r}
+
+data(water)
+
+Water <- water
+
+head(Water)
+
+stat.desc(Water)
+
+
+```
+My comments to Q1: \
+1. aaa \
+2. bbb \
+
+```{r}
+
+densityplot( ~mortality, data=Water)
+
+densityplot( ~ hardness, data=Water)
+
+```
+
+#### The end of file
+
+# ----------------------------

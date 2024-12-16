@@ -1,0 +1,180 @@
+---
+title: "K-Means-Example"
+author: ""
+date: "10/01/2024"
+output: pdf_document
+---
+
+Set the work directory. 
+This MUST be done for every submission
+This will determine the default location of all of your data.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#This sets the working directory
+knitr::opts_knit$set(root.dir = "C:/Users/yunqi/OneDrive - Conestoga College/Conestoga_College/DataScience_Conestoga_2309/Lec_W6")
+
+```
+
+This section is for the basic set up.
+It will clear all the plots, the console and the workspace.
+It also sets the overall format for numbers.
+
+```{r}
+if(!is.null(dev.list())) dev.off()
+cat("\014") 
+rm(list=ls())
+options(scipen=9)
+setwd("C:/Users/yunqi/OneDrive - Conestoga College/Course_teach/DataScience8435_24F/Week_6")
+
+```
+This section loads and attaches all the necessary packages.
+
+```{r}
+#Load packages
+#No Packages are needed
+```
+
+This section reads in the datafile file
+
+```{r}
+
+DenverC <- read.table("DenverCrimeClstr.txt", sep=",", header=TRUE)
+
+DenverC <- as.data.frame(DenverC)
+head(DenverC)
+
+str(DenverC)
+
+```
+Transform Data
+
+```{r}
+
+#Convert to a Factor
+
+DenverC$Counsellor <- as.factor(DenverC$Counsellor)
+
+str(DenverC)   #Check Results
+
+
+```
+
+Set Some Functions
+```{r}
+
+#Create a quick standardization function
+norm01 <- function(x) {
+  return ((x - min(x)) / (max(x) - min(x)))
+}
+
+#A different standardization function
+normn <- function(x) {
+  return ((x-mean(x))/sd(x))
+}
+
+```
+
+
+Explore the Data
+```{r}
+
+
+par(mfrow=c(2,2))
+
+for (i in 1:ncol(DenverC)) {
+  if (is.numeric(DenverC[,i])) {
+      boxplot(DenverC[i], main=names(DenverC)[i],
+              horizontal=TRUE, pch=10)
+  }
+}
+
+par(mfrow=c(1,1))
+
+
+```
+Standardize the Data
+Note - Here we are just standardizing the centroids (Population and Crime)
+
+```{r}
+
+DenverC$Pop_Normx <- normn(DenverC$Pop)
+
+DenverC$Crime_Normx <- normn(DenverC$Crime)
+
+head(DenverC)
+```
+
+
+Set Up for Clusters
+```{r}
+
+# Creating Variable for Elbow Chart
+# Trying for 2 to 8 Clusters
+maxk <- 8
+nk <- c(2:maxk)
+wss <- rep(0,maxk-1)
+
+```
+Create Clusters
+```{r}
+
+#Set Number of Clusters
+k=2
+
+ClstrDen <- kmeans(DenverC[,c(11:12)], iter.max=10, centers=k, nstart=10)
+ClstrDen
+
+DenverC$cluster <- factor(ClstrDen$cluster)   # Adding Cluster tags to variables
+head(DenverC)
+
+centers <- data.frame(cluster=factor(1:k), ClstrDen$centers)
+
+
+wss[k-1] <- ClstrDen$tot.withinss
+```
+
+
+Plot 'Elbow'
+```{r}
+
+##NOTE - Do NOT use other built in functions to make this chart
+##They yield different answers
+
+plot(2:maxk, wss,
+     type="b", pch = 19, frame = FALSE,
+     main="Elbow Chart for Clusters",
+     xlab="Values of K",
+     ylab="Total Within-Clusters SS",
+     ylim=c(0,max(wss)))
+```
+
+```{r}
+k=4
+ClstrDen <- kmeans(DenverC[,c(11:12)], iter.max=10, centers=k, nstart=10)
+ClstrDen
+
+DenverC$cluster <- factor(ClstrDen$cluster)   # Adding Cluster tags to variables
+head(DenverC)
+
+centers <- data.frame(cluster=factor(1:k), ClstrDen$centers)
+```
+
+
+
+Plot the clusters
+```{r}
+plot(DenverC$Pop_Normx, DenverC$Crime_Normx,
+     col=DenverC$cluster, pch=as.numeric(DenverC$cluster))
+
+```
+
+Summarize the Clusters
+```{r}
+SummClusters <- aggregate(cbind(Pop, Child, Lunch, Income, Crime) ~ cluster,
+                          DenverC, FUN=function(x) round(mean(x), 0))
+SummClusters
+
+```
+
+

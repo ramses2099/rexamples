@@ -1,0 +1,13 @@
+﻿ City,FSA,Size,Pop,Houses
+Waterloo,N2L,Large,12567,2094
+Waterloo,N2J,Medium,10035,1433
+Kitchener,N2P,Large,11939,2984
+Kitchener,N2E,Medium,10440,1740
+Kitchener,N2O,Medium,7804,1114
+Cambridge,B0P,Medium,5322,1064
+Waterloo,N2M,Medium,11037,1839
+Waterloo,N2K,Small,5535,922
+Kitchener,N2Q,Medium,8749,1749
+Kitchener,N2R,Large,10165,2033
+Kitchener,N2S,Large,13777,2296
+Cambridge,B0L,Large,14511,2418
